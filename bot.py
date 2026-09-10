@@ -62,7 +62,10 @@ async def handle_nero_app(request):
 
 async def main():
     app = web.Application()
+    # Serve webapp on both / and /nero-app paths
+    app.router.add_get('/', handle_nero_app)
     app.router.add_get('/nero-app', handle_nero_app)
+    
     runner = web.AppRunner(app)
     await runner.setup()
     port = int(os.environ.get('PORT', 8080))
