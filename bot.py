@@ -5,7 +5,7 @@ from aiohttp import web
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
-BOT_TOKEN = "8697311693:AAH4wkFkNR2F8EBSETarhpsPy2_wHAmCHtg"
+BOT_TOKEN = "8697311693:AAGZ-l7JSWchhVa40USYJLDvHOMi-34PjNU"
 WEBAPP_URL = "https://renova-bots-production-8d3b.up.railway.app/nero-app"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
