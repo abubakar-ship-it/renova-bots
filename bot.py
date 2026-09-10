@@ -6,10 +6,10 @@ from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 BOT_TOKEN = "8697311693:AAH4wkFkNR2F8EBSETarhpsPy2_wHAmCHtg"
+WEBAPP_URL = "https://renova-bots-production-8d3b.up.railway.app/nero-app"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    webapp_url = f"https://{os.environ.get('RAILWAY_PUBLIC_DOMAIN', 'renova-bots-production.up.railway.app')}/nero-app"
-    kb = [[KeyboardButton(text="🔮 Open Tarot Reader", web_app=WebAppInfo(url=webapp_url))]]
+    kb = [[KeyboardButton(text="🔮 Open Tarot Reader", web_app=WebAppInfo(url=WEBAPP_URL))]]
     await update.message.reply_text(
         "Welcome to Renova! Tap the button below to draw a card:",
         reply_markup=ReplyKeyboardMarkup(kb, resize_keyboard=True)
