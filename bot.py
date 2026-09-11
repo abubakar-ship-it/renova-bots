@@ -14,6 +14,7 @@ SQUARE_TEXT_READING_URL = "https://square.link/u/yaq743A5"
 SQUARE_VOICE_READING_URL = "https://square.link/u/oYibDkgK"
 WEBSITE_URL = "https://renovaaetherandstone.com"
 TELEGRAM_GROUP_URL = "https://t.me/+3ClNaQ3t5KJjZTJl"
+WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/LTIVL6u2QFl3zEzX2ARKNE"
 
 
 # ==========================================
@@ -25,11 +26,12 @@ def get_main_menu_markup():
     
     btn_readings = InlineKeyboardButton("📜 Book a Reading", callback_data="menu_readings")
     btn_about = InlineKeyboardButton("🔮 About Jarrod & Practice", callback_data="menu_about")
-    btn_group = InlineKeyboardButton("📖 Daily Insights & Group", url=TELEGRAM_GROUP_URL)
-    btn_contact = InlineKeyboardButton("💬 Contact / PayID", callback_data="menu_contact")
+    btn_tele_group = InlineKeyboardButton("📖 Telegram Insights Group", url=TELEGRAM_GROUP_URL)
+    btn_wa_group = InlineKeyboardButton("💬 WhatsApp Insights Community", url=WHATSAPP_GROUP_URL)
+    btn_contact = InlineKeyboardButton("📞 Contact / PayID", callback_data="menu_contact")
     btn_miniapp = InlineKeyboardButton("🌐 Open Interactive Site", web_app=WebAppInfo(url=WEBSITE_URL))
     
-    markup.add(btn_readings, btn_about, btn_group, btn_contact, btn_miniapp)
+    markup.add(btn_readings, btn_about, btn_tele_group, btn_wa_group, btn_contact, btn_miniapp)
     return markup
 
 
@@ -96,12 +98,15 @@ def handle_menu_callbacks(call):
     elif call.data == "menu_contact":
         contact_text = (
             "💬 **CONTACT & DIRECT PAYMENT**\n\n"
-            "• **WhatsApp:** Contact Jarrod directly\n"
+            "• **WhatsApp Community:** Join for updates & insights\n"
             "• **PayID:** `+61479129590`\n"
             "• **Website:** https://renovaaetherandstone.com"
         )
         markup = InlineKeyboardMarkup(row_width=1)
-        markup.add(InlineKeyboardButton("🔙 Back to Main Menu", callback_data="menu_main"))
+        markup.add(
+            InlineKeyboardButton("💬 Join WhatsApp Community", url=WHATSAPP_GROUP_URL),
+            InlineKeyboardButton("🔙 Back to Main Menu", callback_data="menu_main")
+        )
         renova_bot.edit_message_text(
             chat_id=call.message.chat.id,
             message_id=call.message.message_id,
