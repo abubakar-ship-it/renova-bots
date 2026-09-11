@@ -3,51 +3,126 @@ import threading
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
-# Read tokens from Railway environment variables
 RENOVA_TOKEN = os.getenv("RENOVA_BOT_TOKEN")
 NERO_TOKEN = os.getenv("NERO_BOT_TOKEN")
 
 renova_bot = telebot.TeleBot(RENOVA_TOKEN)
 nero_bot = telebot.TeleBot(NERO_TOKEN)
 
-# Live Square Payment Links
+# Live Links
 SQUARE_TEXT_READING_URL = "https://square.link/u/yaq743A5"
 SQUARE_VOICE_READING_URL = "https://square.link/u/oYibDkgK"
 WEBSITE_URL = "https://renovaaetherandstone.com"
+TELEGRAM_GROUP_URL = "https://t.me/+3ClNaQ3t5KJjZTJl"
 
 
 # ==========================================
 # 🌟 RENOVA CLIENT BOT (@RenovaAetherStone1Bot)
 # ==========================================
+
+def get_main_menu_markup():
+    markup = InlineKeyboardMarkup(row_width=1)
+    
+    btn_readings = InlineKeyboardButton("📜 Book a Reading", callback_data="menu_readings")
+    btn_about = InlineKeyboardButton("🔮 About Jarrod & Practice", callback_data="menu_about")
+    btn_group = InlineKeyboardButton("📖 Daily Insights & Group", url=TELEGRAM_GROUP_URL)
+    btn_contact = InlineKeyboardButton("💬 Contact / PayID", callback_data="menu_contact")
+    btn_miniapp = InlineKeyboardButton("🌐 Open Interactive Site", web_app=WebAppInfo(url=WEBSITE_URL))
+    
+    markup.add(btn_readings, btn_about, btn_group, btn_contact, btn_miniapp)
+    return markup
+
+
 @renova_bot.message_handler(commands=['start', 'menu'])
 def renova_welcome(message):
     welcome_text = (
         "✨ **Welcome to Renova Aether & Stone** ✨\n\n"
         "Grounded intuitive guidance, tarot analysis, and energy readings with Jarrod.\n\n"
-        "Select an option below to book your reading or explore the site:"
+        "Select an option below:"
+    )
+    renova_bot.send_message(
+        message.chat.id, 
+        welcome_text, 
+        reply_markup=get_main_menu_markup(), 
+        parse_mode="Markdown"
     )
 
-    markup = InlineKeyboardMarkup(row_width=1)
-    
-    # Square Payment Buttons
-    btn_text_reading = InlineKeyboardButton(
-        "📜 $25 — 3-Question Text Reading", 
-        url=SQUARE_TEXT_READING_URL
-    )
-    btn_voice_reading = InlineKeyboardButton(
-        "🎙️ $50 — 15-Minute Voice Note Reading", 
-        url=SQUARE_VOICE_READING_URL
-    )
-    
-    # Telegram Mini App Webview Button
-    btn_miniapp = InlineKeyboardButton(
-        "🌐 Open Interactive Site (Mini App)", 
-        web_app=WebAppInfo(url=WEBSITE_URL)
-    )
-    
-    markup.add(btn_text_reading, btn_voice_reading, btn_miniapp)
 
-    renova_bot.send_message(message.chat.id, welcome_text, reply_markup=markup, parse_mode="Markdown")
+@renova_bot.callback_query_handler(func=lambda call: True)
+def handle_menu_callbacks(call):
+    if call.data == "menu_readings":
+        readings_text = (
+            "✨ **CHOOSE YOUR READING FORMAT** ✨\n\n"
+            "📜 **3-Question Text Reading ($25 AUD)**\n"
+            "Share three questions and receive a focused written reading with space to return to it in your own time.\n\n"
+            "🎙️ **15-Minute Voice Note Reading ($50 AUD)**\n"
+            "A concise spoken reading for the thread that needs more nuance, delivered in Jarrod's clear and considered voice."
+        )
+        markup = InlineKeyboardMarkup(row_width=1)
+        markup.add(
+            InlineKeyboardButton("💳 Pay $25 & Book Text Reading", url=SQUARE_TEXT_READING_URL),
+            InlineKeyboardButton("💳 Pay $50 & Book Voice Reading", url=SQUARE_VOICE_READING_URL),
+            InlineKeyboardButton("🔙 Back to Main Menu", callback_data="menu_main")
+        )
+        renova_bot.edit_message_text(
+            chat_id=call.message.chat.id,
+            message_id=call.message.message_id,
+            text=readings_text,
+            reply_markup=markup,
+            parse_mode="Markdown"
+        )
+
+    elif call.data == "menu_about":
+        about_text = (
+            "🔮 **ABOUT JARROD & RENOVA AETHER & STONE**\n\n"
+            "A reading practice rooted in attention.\n\n"
+            "Jarrod works at the meeting point of intuitive listening and practical reflection. "
+            "Through tarot, clairaudient insight, and the energetic character of a place, "
+            "each reading makes room for the patterns that want to be noticed — without rushing toward certainty."
+        )
+        markup = InlineKeyboardMarkup(row_width=1)
+        markup.add(
+            InlineKeyboardButton("📜 View Readings & Pricing", callback_data="menu_readings"),
+            InlineKeyboardButton("🔙 Back to Main Menu", callback_data="menu_main")
+        )
+        renova_bot.edit_message_text(
+            chat_id=call.message.chat.id,
+            message_id=call.message.message_id,
+            text=about_text,
+            reply_markup=markup,
+            parse_mode="Markdown"
+        )
+
+    elif call.data == "menu_contact":
+        contact_text = (
+            "💬 **CONTACT & DIRECT PAYMENT**\n\n"
+            "• **WhatsApp:** Contact Jarrod directly\n"
+            "• **PayID:** `+61479129590`\n"
+            "• **Website:** https://renovaaetherandstone.com"
+        )
+        markup = InlineKeyboardMarkup(row_width=1)
+        markup.add(InlineKeyboardButton("🔙 Back to Main Menu", callback_data="menu_main"))
+        renova_bot.edit_message_text(
+            chat_id=call.message.chat.id,
+            message_id=call.message.message_id,
+            text=contact_text,
+            reply_markup=markup,
+            parse_mode="Markdown"
+        )
+
+    elif call.data == "menu_main":
+        welcome_text = (
+            "✨ **Welcome to Renova Aether & Stone** ✨\n\n"
+            "Grounded intuitive guidance, tarot analysis, and energy readings with Jarrod.\n\n"
+            "Select an option below:"
+        )
+        renova_bot.edit_message_text(
+            chat_id=call.message.chat.id,
+            message_id=call.message.message_id,
+            text=welcome_text,
+            reply_markup=get_main_menu_markup(),
+            parse_mode="Markdown"
+        )
 
 
 # ==========================================
@@ -55,15 +130,9 @@ def renova_welcome(message):
 # ==========================================
 @nero_bot.message_handler(commands=['start'])
 def nero_welcome(message):
-    nero_msg = (
-        "🧪 **Nero Sandbox Active** (@Nerolabtestbot)\n\n"
-        "Testing inline webviews and features."
-    )
     markup = InlineKeyboardMarkup()
-    btn_test = InlineKeyboardButton("🧪 Test Webview", web_app=WebAppInfo(url=WEBSITE_URL))
-    markup.add(btn_test)
-
-    nero_bot.send_message(message.chat.id, nero_msg, reply_markup=markup, parse_mode="Markdown")
+    markup.add(InlineKeyboardButton("🧪 Test Webview", web_app=WebAppInfo(url=WEBSITE_URL)))
+    nero_bot.send_message(message.chat.id, "🧪 **Nero Sandbox Active**", reply_markup=markup, parse_mode="Markdown")
 
 
 # ==========================================
