@@ -3,8 +3,8 @@ import threading
 import telebot
 
 # Read environment variables from Railway
-RENOVA_TOKEN = os.getenv(8846130755:AAF0rVmlfB_tWRQThaN0mCCzDj7yE_cFb0Q)
-NERO_TOKEN = os.getenv(8697311693:AAG6qoatlCKvc8SKVoGGHd2SFgg0f-GzdCg)
+RENOVA_TOKEN = os.getenv("RENOVA_BOT_TOKEN")
+NERO_TOKEN = os.getenv("NERO_BOT_TOKEN")
 
 renova_bot = telebot.TeleBot(RENOVA_TOKEN)
 nero_bot = telebot.TeleBot(NERO_TOKEN)
