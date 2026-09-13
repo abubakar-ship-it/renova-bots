@@ -104,6 +104,7 @@ def handle_menu_callbacks(call):
         )
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
+            InlineKeyboardButton("📖 Join Telegram Insights Group", url=TELEGRAM_GROUP_URL),
             InlineKeyboardButton("💬 Join WhatsApp Community", url=WHATSAPP_GROUP_URL),
             InlineKeyboardButton("🔙 Back to Main Menu", callback_data="menu_main")
         )
