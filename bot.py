@@ -39,8 +39,9 @@ def get_main_menu_markup():
 def renova_welcome(message):
     welcome_text = (
         "✨ **Welcome to Renova Aether & Stone** ✨\n\n"
-        "Grounded intuitive guidance, tarot analysis, and energy readings with Jarrod.\n\n"
-        "Select an option below:"
+        "A grounded space for the intuitive work Jarrod has been finding his way back to.\n\n"
+        "Clairaudient listening, tarot and oracle cards, geo-mediumship, empathy, and thoughtful reflection — with a little mystery and both feet near the ground.\n\n"
+        "Choose an option below, and let’s see what is already speaking."
     )
     renova_bot.send_message(
         message.chat.id, 
@@ -119,8 +120,9 @@ def handle_menu_callbacks(call):
     elif call.data == "menu_main":
         welcome_text = (
             "✨ **Welcome to Renova Aether & Stone** ✨\n\n"
-            "Grounded intuitive guidance, tarot analysis, and energy readings with Jarrod.\n\n"
-            "Select an option below:"
+            "A grounded space for the intuitive work Jarrod has been finding his way back to.\n\n"
+            "Clairaudient listening, tarot and oracle cards, geo-mediumship, empathy, and thoughtful reflection — with a little mystery and both feet near the ground.\n\n"
+            "Choose an option below, and let’s see what is already speaking."
         )
         renova_bot.edit_message_text(
             chat_id=call.message.chat.id,
