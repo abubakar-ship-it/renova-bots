@@ -12,7 +12,7 @@ nero_bot = telebot.TeleBot(NERO_TOKEN)
 # Live Links
 SQUARE_TEXT_READING_URL = "https://square.link/u/yaq743A5"
 SQUARE_VOICE_READING_URL = "https://square.link/u/oYibDkgK"
-WEBSITE_URL = "https://renovaaetherandstone.com"
+WEBSITE_URL = "https://www.renovaaetherandstone.com"
 TELEGRAM_GROUP_URL = "https://t.me/+3ClNaQ3t5KJjZTJl"
 WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/LTIVL6u2QFl3zEzX2ARKNE"
 
@@ -100,7 +100,7 @@ def handle_menu_callbacks(call):
             "💬 **CONTACT & DIRECT PAYMENT**\n\n"
             "• **WhatsApp Community:** Join for updates & insights\n"
             "• **PayID:** `+61479129590`\n"
-            "• **Website:** https://renovaaetherandstone.com"
+            "• **Website:** https://www.renovaaetherandstone.com"
         )
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
