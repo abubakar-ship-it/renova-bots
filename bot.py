@@ -7,6 +7,7 @@ RENOVA_TOKEN = os.getenv("RENOVA_BOT_TOKEN")
 NERO_TOKEN = os.getenv("NERO_BOT_TOKEN")
 CLAIR_TOKEN = os.getenv("CLAIR_BOT_TOKEN")
 CLAIR_ADMIN_ID = int(os.getenv("CLAIR_ADMIN_ID", "0"))
+CLAIR_ADMIN_USERNAME = "renovaaetherstone"
 
 renova_bot = telebot.TeleBot(RENOVA_TOKEN)
 nero_bot = telebot.TeleBot(NERO_TOKEN)
@@ -98,7 +99,8 @@ def nero_welcome(message):
 if clair_bot:
     @clair_bot.message_handler(commands=["start", "menu"])
     def clair_welcome(message):
-        if CLAIR_ADMIN_ID and message.from_user.id == CLAIR_ADMIN_ID:
+        is_admin = ((CLAIR_ADMIN_ID and message.from_user.id == CLAIR_ADMIN_ID) or (message.from_user.username or "").lower() == CLAIR_ADMIN_USERNAME)
+        if is_admin:
             text = (
                 "🌙 **Welcome back, Jarrod.**\n\n"
                 "What whispers do we have today?\n\n"
@@ -123,7 +125,8 @@ if clair_bot:
 
     @clair_bot.callback_query_handler(func=lambda call: True)
     def clair_admin_callbacks(call):
-        if not CLAIR_ADMIN_ID or call.from_user.id != CLAIR_ADMIN_ID:
+        is_admin = ((CLAIR_ADMIN_ID and call.from_user.id == CLAIR_ADMIN_ID) or (call.from_user.username or "").lower() == CLAIR_ADMIN_USERNAME)
+        if not is_admin:
             clair_bot.answer_callback_query(call.id, "This quiet room is reserved for Jarrod.")
             return
         if call.data == "clair_requests":
