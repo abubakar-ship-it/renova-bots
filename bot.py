@@ -44,37 +44,51 @@ def renova_start(message):
 def renova_callbacks(call):
     if call.data == "renova_readings":
         text = "✨ **CHOOSE YOUR READING FORMAT** ✨\n\n📜 **3-Question Text Reading — $25 AUD**\nA focused written reading for three questions.\n\n🎙️ **15-Minute Voice Note Reading — $50 AUD**\nA spacious spoken reading delivered by Jarrod."
-        m = InlineKeyboardMarkup(row_width=1); m.add(InlineKeyboardButton("💳 Pay $25 & Book Text Reading", url=TEXT_URL), InlineKeyboardButton("💳 Pay $50 & Book Voice Reading", url=VOICE_URL), InlineKeyboardButton("🔙 Back to Main Menu", callback_data="renova_main"))
+        m = InlineKeyboardMarkup(row_width=1)
+        m.add(InlineKeyboardButton("💳 Pay $25 & Book Text Reading", url=TEXT_URL), InlineKeyboardButton("💳 Pay $50 & Book Voice Reading", url=VOICE_URL), InlineKeyboardButton("🔙 Back to Main Menu", callback_data="renova_main"))
     elif call.data == "renova_about":
         text = "🔮 **ABOUT JARROD & RENOVA AETHER & STONE**\n\nA reading practice rooted in intuitive listening, tarot, geographic energy and grounded reflection."
-        m = InlineKeyboardMarkup(row_width=1); m.add(InlineKeyboardButton("📜 View Readings & Pricing", callback_data="renova_readings"), InlineKeyboardButton("🔙 Back to Main Menu", callback_data="renova_main"))
+        m = InlineKeyboardMarkup(row_width=1)
+        m.add(InlineKeyboardButton("📜 View Readings & Pricing", callback_data="renova_readings"), InlineKeyboardButton("🔙 Back to Main Menu", callback_data="renova_main"))
     elif call.data == "renova_contact":
         text = "💬 **CONTACT & DIRECT PAYMENT**\n\nPayID: `+61479129590`"
-        m = InlineKeyboardMarkup(row_width=1); m.add(InlineKeyboardButton("📖 Telegram Insights Group", url=TELEGRAM_GROUP_URL), InlineKeyboardButton("💬 WhatsApp Community", url=WHATSAPP_GROUP_URL), InlineKeyboardButton("🔙 Back to Main Menu", callback_data="renova_main"))
+        m = InlineKeyboardMarkup(row_width=1)
+        m.add(InlineKeyboardButton("📖 Telegram Insights Group", url=TELEGRAM_GROUP_URL), InlineKeyboardButton("💬 WhatsApp Community", url=WHATSAPP_GROUP_URL), InlineKeyboardButton("🔙 Back to Main Menu", callback_data="renova_main"))
     else:
-        text = "✨ **Welcome to Renova Aether & Stone** ✨\n\nChoose an option below, and let’s see what is already speaking."; m = renova_menu()
-    renova_bot.answer_callback_query(call.id); renova_bot.edit_message_text(call.message.chat.id, call.message.message_id, text, reply_markup=m, parse_mode="Markdown")
+        text = "✨ **Welcome to Renova Aether & Stone** ✨\n\nChoose an option below, and let’s see what is already speaking."
+        m = renova_menu()
+    renova_bot.answer_callback_query(call.id)
+    renova_bot.edit_message_text(text=text, chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=m, parse_mode="Markdown")
 
 @nero_bot.message_handler(commands=["start"])
 def nero_start(message):
-    m = InlineKeyboardMarkup(); m.add(InlineKeyboardButton("🧪 Test Webview", web_app=WebAppInfo(url=WEBSITE_URL))); nero_bot.send_message(message.chat.id, "🧪 **Nero Sandbox Active**", reply_markup=m, parse_mode="Markdown")
+    m = InlineKeyboardMarkup(); m.add(InlineKeyboardButton("🧪 Test Webview", web_app=WebAppInfo(url=WEBSITE_URL)))
+    nero_bot.send_message(message.chat.id, "🧪 **Nero Sandbox Active**", reply_markup=m, parse_mode="Markdown")
 
 if clair_bot:
     @clair_bot.message_handler(commands=["start", "menu"])
     def clair_start(message):
         admin = message.from_user.id == CLAIR_ADMIN_ID or (message.from_user.username or "").lower() == CLAIR_ADMIN_USERNAME
-        if admin: clair_bot.send_message(message.chat.id, "🌙 **Welcome back, Jarrod.**\n\nWhat whispers do we have today?", reply_markup=admin_menu(), parse_mode="Markdown")
-        else: clair_bot.send_message(message.chat.id, "🌙 **Welcome to Clair.**\n\nChoose the reading path you would like to begin.", reply_markup=customer_menu(), parse_mode="Markdown")
+        if admin:
+            clair_bot.send_message(message.chat.id, "🌙 **Welcome back, Jarrod.**\n\nWhat whispers do we have today?", reply_markup=admin_menu(), parse_mode="Markdown")
+        else:
+            clair_bot.send_message(message.chat.id, "🌙 **Welcome to Clair.**\n\nChoose the reading path you would like to begin.", reply_markup=customer_menu(), parse_mode="Markdown")
 
     @clair_bot.message_handler(func=lambda message: True, content_types=["text"])
     def clair_text(message):
-        admin = message.from_user.id == CLAIR_ADMIN_ID or (message.from_user.username or "").lower() == CLAIR_ADMIN_USERNAME; text = message.text
-        if admin and text == "📜 New Reading Requests": clair_bot.send_message(message.chat.id, "📜 **The listening room is waiting.**\n\nCustomer requests will appear here automatically when submitted.", reply_markup=admin_menu(), parse_mode="Markdown"); return
-        if admin and text == "🕯 Reading Status": clair_bot.send_message(message.chat.id, "🕯 **The candle is steady.**\n\nNo unresolved requests are currently displayed here.", reply_markup=admin_menu(), parse_mode="Markdown"); return
-        if admin and text == "🌙 Test Customer Flow": clair_bot.send_message(message.chat.id, "🌙 **Customer Flow Test**\n\nChoose the reading path:", reply_markup=customer_menu(), parse_mode="Markdown"); return
+        admin = message.from_user.id == CLAIR_ADMIN_ID or (message.from_user.username or "").lower() == CLAIR_ADMIN_USERNAME
+        text = message.text
+        if admin and text == "📜 New Reading Requests":
+            clair_bot.send_message(message.chat.id, "📜 **The listening room is waiting.**", reply_markup=admin_menu(), parse_mode="Markdown"); return
+        if admin and text == "🕯 Reading Status":
+            clair_bot.send_message(message.chat.id, "🕯 **The candle is steady.**", reply_markup=admin_menu(), parse_mode="Markdown"); return
+        if admin and text == "🌙 Test Customer Flow":
+            clair_bot.send_message(message.chat.id, "🌙 **Customer Flow Test**\n\nChoose the reading path:", reply_markup=customer_menu(), parse_mode="Markdown"); return
         if admin and text == "💬 Main Menu": clair_start(message); return
-        if text == "🔮 3-Question Text Reading": SESSIONS[message.from_user.id] = {"stage": "questions", "questions": [], "service": "3-Question Text Reading"}; clair_bot.send_message(message.chat.id, "Lovely. Please send your first question."); return
-        if text == "🎙️ 15-Minute Voice Note": SESSIONS[message.from_user.id] = {"stage": "voice", "service": "15-Minute Voice Note Reading"}; clair_bot.send_message(message.chat.id, "Wonderful. Send one main question, related thoughts, or say ‘general reading’. You may also send a Telegram voice message."); return
+        if text == "🔮 3-Question Text Reading":
+            SESSIONS[message.from_user.id] = {"stage": "questions", "questions": [], "service": "3-Question Text Reading"}; clair_bot.send_message(message.chat.id, "Lovely. Please send your first question."); return
+        if text == "🎙️ 15-Minute Voice Note":
+            SESSIONS[message.from_user.id] = {"stage": "voice", "service": "15-Minute Voice Note Reading"}; clair_bot.send_message(message.chat.id, "Wonderful. Send one main question or say ‘general reading’."); return
         if text == "🌐 Renova Website": clair_bot.send_message(message.chat.id, WEBSITE_URL); return
         if text == "❓ Help": clair_bot.send_message(message.chat.id, "Choose a reading, answer Clair’s prompts, review your request, then tap Send to Jarrod."); return
         session = SESSIONS.get(message.from_user.id)
