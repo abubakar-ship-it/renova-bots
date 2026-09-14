@@ -11,7 +11,7 @@ CLAIR_ADMIN_USERNAME = "renovaaetherstone"
 WEBSITE_URL = "https://www.renovaaetherandstone.com"
 TEXT_URL = "https://square.link/u/yaq743A5"
 VOICE_URL = "https://square.link/u/oYibDkgK"
-CLAIR_URL = "https://t.me/ClairAetherBot"
+CLAIR_URL = "https://t.me/ClairAetherBot?start=renova"
 TELEGRAM_GROUP_URL = "https://t.me/+3ClNaQ3t5KJjZTJl"
 WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/LTIVL6u2QFl3zEzX2ARKNE"
 SESSIONS = {}
@@ -37,7 +37,7 @@ def admin_menu():
 
 def reading_options():
     m = InlineKeyboardMarkup(row_width=1)
-    m.add(InlineKeyboardButton("🔮 3-Question Text Reading", callback_data="text"), InlineKeyboardButton("🎙️ 15-Minute Voice Note", callback_data="voice"))
+    m.add(InlineKeyboardButton("🔮 3-Question Text Reading — $25 AUD", callback_data="renova_text"), InlineKeyboardButton("🎙️ 15-Minute Voice Note — $50 AUD", callback_data="renova_voice"), InlineKeyboardButton("🏠 Main Menu", callback_data="renova_main"))
     return m
 
 
@@ -62,9 +62,16 @@ def renova_start(message):
 @renova_bot.callback_query_handler(func=lambda call: call.data.startswith("renova_"))
 def renova_callbacks(call):
     if call.data == "renova_readings":
-        text = "✨ **CHOOSE YOUR READING FORMAT** ✨\n\n📜 **3-Question Text Reading — $25 AUD**\nA focused written reading for three questions.\n\n🎙️ **15-Minute Voice Note Reading — $50 AUD**\nA spacious spoken reading delivered by Jarrod.\n\nAfter payment, tap **Continue with Clair — RAS** to send your questions or voice-note request to Jarrod."
+        text = "✨ **CHOOSE YOUR READING FORMAT** ✨\n\nSelect your reading below. After choosing, Renova will show the correct payment link and remind you to continue with Clair — RAS."
+        m = reading_options()
+    elif call.data == "renova_text":
+        text = "🔮 **3-QUESTION TEXT READING — $25 AUD**\n\nPlease complete payment, then return here and tap **Continue with Clair — RAS**. Clair will collect your three questions and send them to Jarrod."
         m = InlineKeyboardMarkup(row_width=1)
-        m.add(InlineKeyboardButton("💳 Pay $25 & Book Text Reading", url=TEXT_URL), InlineKeyboardButton("💳 Pay $50 & Book Voice Reading", url=VOICE_URL), InlineKeyboardButton("🌙 Continue with Clair — RAS", url=CLAIR_URL), InlineKeyboardButton("🔙 Back to Main Menu", callback_data="renova_main"))
+        m.add(InlineKeyboardButton("💳 Pay $25 AUD", url=TEXT_URL), InlineKeyboardButton("🌙 Continue with Clair — RAS", url=CLAIR_URL), InlineKeyboardButton("🏠 Main Menu", callback_data="renova_main"))
+    elif call.data == "renova_voice":
+        text = "🎙️ **15-MINUTE VOICE NOTE READING — $50 AUD**\n\nPlease complete payment, then return here and tap **Continue with Clair — RAS**. Clair will collect your voice-note request and send it to Jarrod."
+        m = InlineKeyboardMarkup(row_width=1)
+        m.add(InlineKeyboardButton("💳 Pay $50 AUD", url=VOICE_URL), InlineKeyboardButton("🌙 Continue with Clair — RAS", url=CLAIR_URL), InlineKeyboardButton("🏠 Main Menu", callback_data="renova_main"))
     elif call.data == "renova_about":
         text = "🔮 **ABOUT JARROD & RENOVA AETHER & STONE**\n\nA reading practice rooted in intuitive listening, tarot, geographic energy and grounded reflection."
         m = InlineKeyboardMarkup(row_width=1)
@@ -93,7 +100,7 @@ if clair_bot:
         if admin:
             clair_bot.send_message(message.chat.id, "🌙 **Welcome back, Jarrod.**\n\nWhat whispers do we have today?", reply_markup=admin_menu(), parse_mode="Markdown")
         else:
-            clair_bot.send_message(message.chat.id, "🌙 **Welcome to Clair.**\n\nChoose the reading path you would like to begin.", reply_markup=customer_menu(), parse_mode="Markdown")
+            clair_bot.send_message(message.chat.id, "🌙 **Welcome to Clair — RAS.**\n\nI’m Renova’s reading companion, and I’ll help gather your questions or voice-note request for Jarrod.\n\nChoose your reading path below when you’re ready.", reply_markup=customer_menu(), parse_mode="Markdown")
 
     @clair_bot.message_handler(func=lambda message: True, content_types=["text"])
     def clair_text(message):
