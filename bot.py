@@ -122,7 +122,19 @@ if clair_bot:
         if call.data == "clair_requests": response = "📜 **The listening room is waiting.**"
         elif call.data == "clair_conversations": response = "🔮 **The threads are gathered.**"
         elif call.data == "clair_status": response = "🕯 **The candle is steady.**"
-        else: response = "🌙 **The veil is thin.**"
+        elif call.data == "clair_test":
+            clair_bot.answer_callback_query(call.id)
+            markup = InlineKeyboardMarkup(row_width=1)
+            markup.add(InlineKeyboardButton("🔮 3-Question Text Reading", callback_data="clair_text"), InlineKeyboardButton("🎙️ 15-Minute Voice Note", callback_data="clair_voice"), InlineKeyboardButton("🔙 Back to Jarrod’s Menu", callback_data="clair_admin_menu"))
+            clair_bot.send_message(call.message.chat.id, "🌙 **Customer Flow Test**\n\nChoose the reading path you want to test:", reply_markup=markup, parse_mode="Markdown")
+            return
+        elif call.data == "clair_admin_menu":
+            clair_bot.answer_callback_query(call.id)
+            markup = InlineKeyboardMarkup(row_width=1)
+            markup.add(InlineKeyboardButton("📜 New Reading Requests", callback_data="clair_requests"), InlineKeyboardButton("🔮 Continue a Conversation", callback_data="clair_conversations"), InlineKeyboardButton("🕯 Reading Status", callback_data="clair_status"), InlineKeyboardButton("🌙 Test the Flow", callback_data="clair_test"))
+            clair_bot.send_message(call.message.chat.id, "🌙 **Welcome back, Jarrod.**\n\nThe listening room is open.", reply_markup=markup, parse_mode="Markdown")
+            return
+        else: response = "🌙 **The veil is thin.**\n\nChoose Test the Flow to preview the customer menu."
         clair_bot.answer_callback_query(call.id)
         clair_bot.send_message(call.message.chat.id, response, parse_mode="Markdown")
 
